@@ -15,9 +15,10 @@ contract SupplementTracker {
     mapping(uint => SupplementInfo) public supplements;
     uint public productCount = 0;
 
-    function addSupplement(string memory _name, string memory _manufacturer, uint _proteinContent, uint _carbs, uint _fats, string memory _expiryDate) public {
+    function addSupplement(string memory _name, string memory _manufacturer, uint _proteinContent, uint _carbs, uint _fats, string memory _expiryDate) public returns (SupplementInfo memory) {
         supplements[productCount] = SupplementInfo(_name, _manufacturer, _proteinContent, _carbs, _fats, _expiryDate);
         productCount++;
+        return supplements[productCount];
     }
 
     function getSupplementInfo(uint _productId) public view returns (SupplementInfo memory) {

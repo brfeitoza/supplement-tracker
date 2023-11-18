@@ -39,7 +39,45 @@
 					}
 				],
 				"name": "addSupplement",
-				"outputs": [],
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "string",
+								"name": "name",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "manufacturer",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "proteinContent",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "carbs",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "fats",
+								"type": "uint256"
+							},
+							{
+								"internalType": "string",
+								"name": "expiryDate",
+								"type": "string"
+							}
+						],
+						"internalType": "struct SupplementTracker.SupplementInfo",
+						"name": "",
+						"type": "tuple"
+					}
+				],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
@@ -180,11 +218,11 @@
 	},
 	"sources": {
 		"contracts/SupplementTracker.sol": {
-			"keccak256": "0x7752fa2e8d71509a079e404ff5359276f093cd5caa4f447857921979aea5ec96",
+			"keccak256": "0xc8e46719bd25bc9611b93d5e3cae8716b7ffcc3fe49890654257c4127e15cf87",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://e96c29a2b0c48f5dec09edcb57f798742873ba84b26feda03c50e6f5cd0481d1",
-				"dweb:/ipfs/QmetBxb4pkEUGReTWDhJT8vhsp1ey7c3UWhrHq8HgA9Sq3"
+				"bzz-raw://1687e1b250beef1498d4a4130970195ab372f649d9de8d9beafe47555eea1dab",
+				"dweb:/ipfs/QmZEZ5PXkpSZARAmexedxFAYaAkWVGKrVKWRfFDWZC7yH9"
 			]
 		}
 	},
