@@ -19,7 +19,7 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "_proteinContent",
+						"name": "_proteins",
 						"type": "uint256"
 					},
 					{
@@ -36,48 +36,15 @@
 						"internalType": "string",
 						"name": "_expiryDate",
 						"type": "string"
+					},
+					{
+						"internalType": "bytes",
+						"name": "_ownerSignature",
+						"type": "bytes"
 					}
 				],
 				"name": "addSupplement",
-				"outputs": [
-					{
-						"components": [
-							{
-								"internalType": "string",
-								"name": "name",
-								"type": "string"
-							},
-							{
-								"internalType": "string",
-								"name": "manufacturer",
-								"type": "string"
-							},
-							{
-								"internalType": "uint256",
-								"name": "proteinContent",
-								"type": "uint256"
-							},
-							{
-								"internalType": "uint256",
-								"name": "carbs",
-								"type": "uint256"
-							},
-							{
-								"internalType": "uint256",
-								"name": "fats",
-								"type": "uint256"
-							},
-							{
-								"internalType": "string",
-								"name": "expiryDate",
-								"type": "string"
-							}
-						],
-						"internalType": "struct SupplementTracker.SupplementInfo",
-						"name": "",
-						"type": "tuple"
-					}
-				],
+				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
@@ -85,7 +52,31 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "_productId",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "authorizedSigners",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_supplementId",
 						"type": "uint256"
 					}
 				],
@@ -94,6 +85,11 @@
 					{
 						"components": [
 							{
+								"internalType": "address",
+								"name": "owner",
+								"type": "address"
+							},
+							{
 								"internalType": "string",
 								"name": "name",
 								"type": "string"
@@ -105,7 +101,7 @@
 							},
 							{
 								"internalType": "uint256",
-								"name": "proteinContent",
+								"name": "proteins",
 								"type": "uint256"
 							},
 							{
@@ -133,16 +129,80 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "productCount",
-				"outputs": [
+				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "",
+						"name": "_supplementId",
 						"type": "uint256"
 					}
 				],
+				"name": "getSupplementSignatures",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "address",
+								"name": "signer",
+								"type": "address"
+							},
+							{
+								"internalType": "bytes32",
+								"name": "messageHash",
+								"type": "bytes32"
+							},
+							{
+								"internalType": "bytes",
+								"name": "signature",
+								"type": "bytes"
+							}
+						],
+						"internalType": "struct SupplementTracker.SupplementSignature[]",
+						"name": "",
+						"type": "tuple[]"
+					}
+				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_supplementId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "_signer",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "_authorization",
+						"type": "bool"
+					}
+				],
+				"name": "setSignerAuthorization",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_supplementId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bytes",
+						"name": "_signature",
+						"type": "bytes"
+					}
+				],
+				"name": "signSupplement",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -156,6 +216,11 @@
 				"name": "supplements",
 				"outputs": [
 					{
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
 						"internalType": "string",
 						"name": "name",
 						"type": "string"
@@ -167,7 +232,7 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "proteinContent",
+						"name": "proteins",
 						"type": "uint256"
 					},
 					{
@@ -184,6 +249,53 @@
 						"internalType": "string",
 						"name": "expiryDate",
 						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "supplementsCount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "supplementsSignatures",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "signer",
+						"type": "address"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "messageHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes",
+						"name": "signature",
+						"type": "bytes"
 					}
 				],
 				"stateMutability": "view",
@@ -218,11 +330,11 @@
 	},
 	"sources": {
 		"contracts/SupplementTracker.sol": {
-			"keccak256": "0xc8e46719bd25bc9611b93d5e3cae8716b7ffcc3fe49890654257c4127e15cf87",
+			"keccak256": "0x2ffc04a73c8441a11b7eb497156d8245de1e978bbff0d86db5bfe52aa2a169f1",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://1687e1b250beef1498d4a4130970195ab372f649d9de8d9beafe47555eea1dab",
-				"dweb:/ipfs/QmZEZ5PXkpSZARAmexedxFAYaAkWVGKrVKWRfFDWZC7yH9"
+				"bzz-raw://f82f5fe18502ed510461f68d1ac7683fb62150cc59b3998fd7170bb47049719c",
+				"dweb:/ipfs/QmcCyf887sKsYaFvQFC6znVRvAXiewPV6xxepjY23jTCzt"
 			]
 		}
 	},
