@@ -17,6 +17,7 @@ contract SupplementTracker {
         address signer;
         bytes32 messageHash;
         bytes signature;
+        bool revoked;
     }
 
     mapping(uint256 => SupplementInfo) public supplements;
@@ -39,6 +40,45 @@ contract SupplementTracker {
         authorizedSigners[_supplementId][_signer] = _authorization;
     }
 
+    function isRevokeAuthorized(address _signer, uint256 _supplementId)
+        internal
+        view
+        returns (bool)
+    {
+        bool hasActiveSignature = false;
+
+        SupplementSignature[] memory allSignatures = supplementsSignatures[
+            _supplementId
+        ];
+        uint256 numSignatures = allSignatures.length;
+
+        for (uint256 i = 0; i < numSignatures; i++) {
+            if (
+                allSignatures[i].signer == _signer && !allSignatures[i].revoked
+            ) {
+                hasActiveSignature = true;
+                break;
+            }
+        }
+
+        return hasActiveSignature;
+    }
+
+    function revokeSignature(uint256 _supplementId) public {
+        require(_supplementId < supplementsCount, "Supplement not found.");
+
+        SupplementSignature[] storage signatures = supplementsSignatures[
+            _supplementId
+        ];
+
+        for (uint256 i = 0; i < signatures.length; i++) {
+            if (signatures[i].signer == msg.sender && !signatures[i].revoked) {
+                signatures[i].revoked = true;
+                break;
+            }
+        }
+    }
+
     function signSupplement(
         uint256 _supplementId,
         bytes memory _signature,
@@ -55,7 +95,7 @@ contract SupplementTracker {
         ];
 
         signatures.push(
-            SupplementSignature(msg.sender, _messageHash, _signature)
+            SupplementSignature(msg.sender, _messageHash, _signature, false)
         );
 
         supplementsSignatures[_supplementId] = signatures;
@@ -94,8 +134,14 @@ contract SupplementTracker {
         ];
 
         signatures.push(
-            SupplementSignature(msg.sender, _messageHash, _ownerSignature)
+            SupplementSignature(
+                msg.sender,
+                _messageHash,
+                _ownerSignature,
+                false
+            )
         );
+        authorizedSigners[supplementsCount][msg.sender] = true;
 
         supplementsCount++;
     }
@@ -131,5 +177,31 @@ contract SupplementTracker {
         }
 
         return result;
+    }
+
+    function getAuthorizedSigners(uint256 _supplementId)
+        public
+        view
+        returns (address[] memory)
+    {
+        require(_supplementId < supplementsCount, "Supplement not found.");
+
+        address[] memory authorizedSignersList = new address[](
+            supplementsCount
+        );
+        uint256 count = 0;
+
+        for (uint256 i = 0; i < supplementsCount; i++) {
+            if (authorizedSigners[_supplementId][supplements[i].owner]) {
+                authorizedSignersList[count] = supplements[i].owner;
+                count++;
+            }
+        }
+
+        assembly {
+            mstore(authorizedSignersList, count)
+        }
+
+        return authorizedSignersList;
     }
 }

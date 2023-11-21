@@ -85,6 +85,25 @@
 						"type": "uint256"
 					}
 				],
+				"name": "getAuthorizedSigners",
+				"outputs": [
+					{
+						"internalType": "address[]",
+						"name": "",
+						"type": "address[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_supplementId",
+						"type": "uint256"
+					}
+				],
 				"name": "getSupplementSignatures",
 				"outputs": [
 					{
@@ -103,6 +122,11 @@
 								"internalType": "bytes",
 								"name": "signature",
 								"type": "bytes"
+							},
+							{
+								"internalType": "bool",
+								"name": "revoked",
+								"type": "bool"
 							}
 						],
 						"internalType": "struct SupplementTracker.SupplementSignature[]",
@@ -161,6 +185,19 @@
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_supplementId",
+						"type": "uint256"
+					}
+				],
+				"name": "revokeSignature",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -300,6 +337,11 @@
 						"internalType": "bytes",
 						"name": "signature",
 						"type": "bytes"
+					},
+					{
+						"internalType": "bool",
+						"name": "revoked",
+						"type": "bool"
 					}
 				],
 				"stateMutability": "view",
@@ -334,11 +376,11 @@
 	},
 	"sources": {
 		"contracts/SupplementTracker.sol": {
-			"keccak256": "0x344d10e4c9e8a1d2573bbb0ee1c08d9d36f8b4b97090545ab2067d3cb4782396",
+			"keccak256": "0x0fd95e75548163cc9e5e5e780473a0059706b0ddbf90baff69d86c3faa84a3a4",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://0ea39f656cb2d0db0529c101228d04c6039b6ac75839a8dcea1e42fadf0de495",
-				"dweb:/ipfs/QmSfLcXro1pN3sCXkVDPm6mai3mQtpESuKQNowcMZb8a9y"
+				"bzz-raw://1bceecd39c12be4e281d05d888dda662881b7a5fdf9d9a8756410524512abec3",
+				"dweb:/ipfs/QmTHu6Uy2eERjXqgL61x4gb5aHPjW7zQHFrK1hNcey7cLN"
 			]
 		}
 	},
