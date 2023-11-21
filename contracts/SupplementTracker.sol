@@ -39,56 +39,15 @@ contract SupplementTracker {
         authorizedSigners[_supplementId][_signer] = _authorization;
     }
 
-    function isValidSignature(
-        address _signer,
-        bytes32 _messageHash,
-        bytes memory _signature
-    ) internal pure returns (bool) {
-        require(_signer != address(0), "Invalid signer address");
-        require(_signature.length == 65, "Invalid signature length");
-
-        bytes32 r;
-        bytes32 s;
-        uint8 v;
-
-        assembly {
-            r := mload(add(_signature, 32))
-            s := mload(add(_signature, 64))
-            v := byte(0, mload(add(_signature, 96)))
-        }
-
-        if (v < 27) {
-            v += 27;
-        }
-
-        return ecrecover(_messageHash, v, r, s) == _signer;
-    }
-
-    function signSupplement(uint256 _supplementId, bytes memory _signature)
-        public
-    {
+    function signSupplement(
+        uint256 _supplementId,
+        bytes memory _signature,
+        bytes32 _messageHash
+    ) public {
         require(_supplementId < supplementsCount, "Supplement not found.");
         require(
             isAuthorized(msg.sender, _supplementId),
             "Only authorized parties can sign the supplement."
-        );
-
-        SupplementInfo memory supplement = supplements[_supplementId];
-
-        bytes32 messageHash = keccak256(
-            abi.encodePacked(
-                supplement.name,
-                supplement.manufacturer,
-                supplement.proteins,
-                supplement.carbs,
-                supplement.fats,
-                supplement.expiryDate
-            )
-        );
-
-        require(
-            isValidSignature(msg.sender, messageHash, _signature),
-            "Invalid signature"
         );
 
         SupplementSignature[] storage signatures = supplementsSignatures[
@@ -96,7 +55,7 @@ contract SupplementTracker {
         ];
 
         signatures.push(
-            SupplementSignature(msg.sender, messageHash, _signature)
+            SupplementSignature(msg.sender, _messageHash, _signature)
         );
 
         supplementsSignatures[_supplementId] = signatures;
@@ -117,7 +76,8 @@ contract SupplementTracker {
         uint256 _carbs,
         uint256 _fats,
         string memory _expiryDate,
-        bytes memory _ownerSignature
+        bytes memory _ownerSignature,
+        bytes32 _messageHash
     ) public {
         supplements[supplementsCount] = SupplementInfo(
             msg.sender,
@@ -129,31 +89,25 @@ contract SupplementTracker {
             _expiryDate
         );
 
-        bytes32 messageHash = keccak256(
-            abi.encodePacked(
-                supplements[supplementsCount].name,
-                supplements[supplementsCount].manufacturer,
-                supplements[supplementsCount].proteins,
-                supplements[supplementsCount].carbs,
-                supplements[supplementsCount].fats,
-                supplements[supplementsCount].expiryDate
-            )
-        );
-
-        require(
-            isValidSignature(msg.sender, messageHash, _ownerSignature),
-            "Invalid signature"
-        );
-
         SupplementSignature[] storage signatures = supplementsSignatures[
             supplementsCount
         ];
 
         signatures.push(
-            SupplementSignature(msg.sender, messageHash, _ownerSignature)
+            SupplementSignature(msg.sender, _messageHash, _ownerSignature)
         );
 
         supplementsCount++;
+    }
+
+    function getSupplements() public view returns (SupplementInfo[] memory) {
+        SupplementInfo[] memory supplementList = new SupplementInfo[](
+            supplementsCount
+        );
+        for (uint256 i = 0; i < supplementsCount; i++) {
+            supplementList[i] = supplements[i];
+        }
+        return supplementList;
     }
 
     function getSupplementSignatures(uint256 _supplementId)
@@ -161,15 +115,21 @@ contract SupplementTracker {
         view
         returns (SupplementSignature[] memory)
     {
-        return supplementsSignatures[_supplementId];
-    }
-
-    function getSupplementInfo(uint256 _supplementId)
-        public
-        view
-        returns (SupplementInfo memory)
-    {
         require(_supplementId < supplementsCount, "Supplement not found.");
-        return supplements[_supplementId];
+
+        SupplementSignature[] memory allSignatures = supplementsSignatures[
+            _supplementId
+        ];
+        uint256 numSignatures = allSignatures.length;
+
+        SupplementSignature[] memory result = new SupplementSignature[](
+            numSignatures
+        );
+
+        for (uint256 i = 0; i < numSignatures; i++) {
+            result[i] = allSignatures[i];
+        }
+
+        return result;
     }
 }
