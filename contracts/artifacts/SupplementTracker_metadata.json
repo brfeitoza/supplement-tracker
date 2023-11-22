@@ -8,6 +8,24 @@
 			{
 				"inputs": [
 					{
+						"internalType": "uint256",
+						"name": "_supplementId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "_signer",
+						"type": "address"
+					}
+				],
+				"name": "addAuthorizedSigner",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "string",
 						"name": "_name",
 						"type": "string"
@@ -51,30 +69,6 @@
 				"name": "addSupplement",
 				"outputs": [],
 				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					},
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"name": "authorizedSigners",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -193,9 +187,14 @@
 						"internalType": "uint256",
 						"name": "_supplementId",
 						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "_signer",
+						"type": "address"
 					}
 				],
-				"name": "revokeSignature",
+				"name": "removeAuthorizedSigner",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -206,19 +205,9 @@
 						"internalType": "uint256",
 						"name": "_supplementId",
 						"type": "uint256"
-					},
-					{
-						"internalType": "address",
-						"name": "_signer",
-						"type": "address"
-					},
-					{
-						"internalType": "bool",
-						"name": "_authorization",
-						"type": "bool"
 					}
 				],
-				"name": "setSignerAuthorization",
+				"name": "revokeSignature",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -376,11 +365,11 @@
 	},
 	"sources": {
 		"contracts/SupplementTracker.sol": {
-			"keccak256": "0x0fd95e75548163cc9e5e5e780473a0059706b0ddbf90baff69d86c3faa84a3a4",
+			"keccak256": "0x6d06cad05a6a9968d042178d243fc4e9242acbf4546c03613cba7fe317ef6489",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://1bceecd39c12be4e281d05d888dda662881b7a5fdf9d9a8756410524512abec3",
-				"dweb:/ipfs/QmTHu6Uy2eERjXqgL61x4gb5aHPjW7zQHFrK1hNcey7cLN"
+				"bzz-raw://cace4fe6e5ae5e1da4691d945098b9ff421f77565946ea85963bdf5789e5196f",
+				"dweb:/ipfs/QmZTUFzKYv7WpSA6tdcrQBXMp5j17wHSDYoXijxwjE69SJ"
 			]
 		}
 	},

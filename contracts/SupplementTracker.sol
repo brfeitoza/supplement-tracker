@@ -11,6 +11,19 @@ contract SupplementTracker {
         uint256 carbs;
         uint256 fats;
         string expiryDate;
+        // string lotNumber;
+        // string originOfIngredients;
+        // uint256 manufacturingDate;
+        // uint256 vitamins;
+        // uint256 minerals;
+        // string[] testResults;
+        // uint256 serialNumber;
+        // string transportConditions;
+        // string manufacturerAddress;
+        // string manufacturerPhone;
+        // string manufacturerWebsite;
+        // string barcode;
+        // string[] regulations;
     }
 
     struct SupplementSignature {
@@ -22,22 +35,32 @@ contract SupplementTracker {
 
     mapping(uint256 => SupplementInfo) public supplements;
     mapping(uint256 => SupplementSignature[]) public supplementsSignatures;
-    mapping(uint256 => mapping(address => bool)) public authorizedSigners;
+    mapping(uint256 => address[]) authorizedSigners;
 
     uint256 public supplementsCount = 0;
 
-    function setSignerAuthorization(
-        uint256 _supplementId,
-        address _signer,
-        bool _authorization
-    ) public {
+    function addAuthorizedSigner(uint256 _supplementId, address _signer)
+        public
+    {
         require(_supplementId < supplementsCount, "Supplement not found.");
-        require(
-            msg.sender == supplements[_supplementId].owner,
-            "Only the owner can set the signer authorization."
-        );
+        authorizedSigners[_supplementId].push(_signer);
+    }
 
-        authorizedSigners[_supplementId][_signer] = _authorization;
+    function removeAuthorizedSigner(uint256 _supplementId, address _signer)
+        public
+    {
+        require(_supplementId < supplementsCount, "Supplement not found.");
+        address[] storage data = authorizedSigners[_supplementId];
+
+        for (uint256 i = 0; i < data.length; i++) {
+            if (data[i] == _signer) {
+                for (uint256 j = i; j < data.length - 1; j++) {
+                    data[j] = data[j + 1];
+                }
+                data.pop();
+                break;
+            }
+        }
     }
 
     function isRevokeAuthorized(address _signer, uint256 _supplementId)
@@ -106,7 +129,17 @@ contract SupplementTracker {
         view
         returns (bool)
     {
-        return authorizedSigners[_supplementId][_signer];
+        require(_supplementId < supplementsCount, "Supplement not found.");
+
+        address[] memory data = authorizedSigners[_supplementId];
+
+        for (uint256 i = 0; i < data.length; i++) {
+            if (data[i] == _signer) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     function addSupplement(
@@ -141,7 +174,8 @@ contract SupplementTracker {
                 false
             )
         );
-        authorizedSigners[supplementsCount][msg.sender] = true;
+
+        authorizedSigners[supplementsCount].push(msg.sender);
 
         supplementsCount++;
     }
@@ -186,22 +220,14 @@ contract SupplementTracker {
     {
         require(_supplementId < supplementsCount, "Supplement not found.");
 
-        address[] memory authorizedSignersList = new address[](
-            supplementsCount
+        address[] memory authorizedSignersArray = new address[](
+            authorizedSigners[_supplementId].length
         );
-        uint256 count = 0;
 
-        for (uint256 i = 0; i < supplementsCount; i++) {
-            if (authorizedSigners[_supplementId][supplements[i].owner]) {
-                authorizedSignersList[count] = supplements[i].owner;
-                count++;
-            }
+        for (uint256 i = 0; i < authorizedSigners[_supplementId].length; i++) {
+            authorizedSignersArray[i] = authorizedSigners[_supplementId][i];
         }
 
-        assembly {
-            mstore(authorizedSignersList, count)
-        }
-
-        return authorizedSignersList;
+        return authorizedSignersArray;
     }
 }
